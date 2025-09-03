@@ -1,0 +1,55 @@
+{
+  "name": "auto-changelog-plus",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Command line tool for generating a changelog from git tags and commit history",
+  "author": "Lruihao (https://lruihao.cn)",
+  "license": "MIT",
+  "homepage": "https://github.com/Lruihao/auto-changelog",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lruihao/auto-changelog.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Lruihao/auto-changelog/issues"
+  },
+  "keywords": [
+    "auto",
+    "automatic",
+    "changelog",
+    "change",
+    "log",
+    "generator",
+    "git",
+    "commit",
+    "commits",
+    "history"
+  ],
+  "bin": {
+    "acp": "./dist/cli.js",
+    "auto-changelog-plus": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "settings"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "dev": "tsx src/cli.ts",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit",
+    "version": "pnpm dev && git add CHANGELOG.md"
+  },
+  "dependencies": {
+    "auto-changelog": "^2.5.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^5.2.1",
+    "@types/node": "^24.3.0",
+    "bumpp": "^10.2.3",
+    "eslint": "^9.34.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}

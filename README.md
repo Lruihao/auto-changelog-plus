@@ -72,7 +72,7 @@ auto-changelog-plus --output HISTORY.md --template keepachangelog
 auto-changelog-plus --commit-limit false
 ```
 
-> 执行 `fixit-releaser changelog -h` 获取帮助或者参考 [auto-changelog](https://github.com/cookpete/auto-changelog) 文档。
+> 执行 `auto-changelog-plus -h` 获取帮助或者参考 [auto-changelog](https://github.com/cookpete/auto-changelog) 文档。
 
 ## 📝 约定式提交
 

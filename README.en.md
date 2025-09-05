@@ -72,7 +72,7 @@ auto-changelog-plus --output HISTORY.md --template keepachangelog
 auto-changelog-plus --commit-limit false
 ```
 
-> Run `fixit-releaser changelog -h` for help or refer to [auto-changelog](https://github.com/cookpete/auto-changelog) documentation.
+> Run `auto-changelog-plus -h` for help or refer to [auto-changelog](https://github.com/cookpete/auto-changelog) documentation.
 
 ## 📝 Conventional Commits
 

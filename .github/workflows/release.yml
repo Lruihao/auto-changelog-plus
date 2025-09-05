@@ -12,15 +12,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          fetch-depth: 0    # Fetch all history for generating release notes
+          fetch-depth: 0 # Fetch all history for generating release notes
 
+      - uses: pnpm/action-setup@v4
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
           cache: pnpm
-      
-      - uses: pnpm/action-setup@v4
+
       - name: Install dependencies
         run: |
           pnpm install --frozen-lockfile

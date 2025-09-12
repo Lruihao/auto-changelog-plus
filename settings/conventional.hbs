@@ -80,9 +80,18 @@ Regex reminders
 
     > This release includes **{{merges.length}}** merged pull request{{#unless (eq merges.length 1)}}s{{/unless}} that {{#if (eq merges.length 1)}}has{{else}}have{{/if}} been successfully integrated into the codebase.
 
+    {{#if (gt merges.length 5)}}
+    <details>
+    <summary>Click to expand merged PRs</summary>
+    {{/if}}
+
     {{#each merges}}
       - {{#if commit.breaking}}**Breaking change:** {{/if}}{{capitalize message}} by {{githubUser author}} in {{#if id}}#{{id}}{{/if}}
     {{/each}}
+
+    {{#if (gt merges.length 5)}}
+    </details>
+    {{/if}}
   {{/if}}
 
   {{#if fixes}}
@@ -90,9 +99,18 @@ Regex reminders
 
     > This release addresses **{{fixes.length}}** issue{{#unless (eq fixes.length 1)}}s{{/unless}} that {{#if (eq fixes.length 1)}}has{{else}}have{{/if}} been resolved and closed.
 
+    {{#if (gt fixes.length 5)}}
+    <details>
+    <summary>Click to expand closed issues</summary>
+    {{/if}}
+
     {{#each fixes}}
       - {{#if commit.breaking}}**Breaking change:** {{/if}}{{capitalize commit.subject}}{{#each fixes}} {{#if id}}#{{id}}{{/if}}{{/each}} by {{githubUser commit.author}}
     {{/each}}
+
+    {{#if (gt fixes.length 5)}}
+    </details>
+    {{/if}}
   {{/if}}
 
   {{#if (or merges.length fixes.length)}}

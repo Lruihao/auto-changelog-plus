@@ -2,7 +2,7 @@
 
 [中文](./README.md) | English
 
-A command line tool for automatically generating changelog from git commit history.
+A command line tool to generate changelogs from git commit history automatically.
 
 > Based on [auto-changelog](https://github.com/CookPete/auto-changelog) and [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
 
@@ -16,7 +16,7 @@ npm install -g auto-changelog-plus
 
 ## 🚀 Usage
 
-Run `auto-changelog-plus` or `acp` in the root directory of your git repository. The tool will run `git log` in the background to parse commit history.
+Run `auto-changelog-plus` or `acp` in the root directory of your git repository. The tool will run `git log` behind the scenes to parse the commit history.
 
 ```bash
 Usage: auto-changelog-plus [options]
@@ -68,35 +68,35 @@ auto-changelog-plus
 # Write changelog to HISTORY.md using keepachangelog template
 auto-changelog-plus --output HISTORY.md --template keepachangelog
 
-# Disable commit limit, render all commits for each release
+# Disable commit limit to render all commits for each release
 auto-changelog-plus --commit-limit false
 ```
 
-> Run `auto-changelog-plus -h` for help or refer to [auto-changelog](https://github.com/cookpete/auto-changelog) documentation.
+> Run `auto-changelog-plus -h` for help or refer to the [auto-changelog](https://github.com/cookpete/auto-changelog) documentation.
 
 ## 📝 Conventional Commits
 
-Based on [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification, supports the following commit types:
+Based on the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification, supports the following commit types:
 
 - `feat:` New features
 - `fix:` Bug fixes
-- `perf:` Performance optimizations
+- `perf:` Performance improvements
 - `refactor:` Code refactoring
 - `docs:` Documentation changes
-- `test:` Test related
+- `test:` Test-related changes
 - `style:` Code formatting adjustments
 - `chore:` Build process or auxiliary tool changes
 - `build:` Build system changes
 - `ci:` Continuous integration configuration changes
-- `revert:` Code rollback
-- Supports scope: `feat(api):`, `fix(ui):` etc.
-- Supports emoji: `:sparkles: feat:`, `✨ feat:` etc.
-- Supports Breaking Changes: `feat!:`, `feat(scope)!:`, `BREAKING CHANGE:` etc.
-- Auto ignores WIP commits: `wip:`, `Wip:` etc. temporary commits will not be included in changelog
+- `revert:` Code rollbacks
+- Supports scope: `feat(api):`, `fix(ui):`, etc.
+- Supports emoji: `:sparkles: feat:`, `✨ feat:`, etc.
+- Supports Breaking Changes: `feat!:`, `feat(scope)!:`, `BREAKING CHANGE:`, etc.
+- Automatically ignores WIP commits: `wip:`, `Wip:`, etc. temporary commits will not be included in the changelog
 
 ## ⚙️ Automated Usage
 
-Install `auto-changelog-plus` as a dev dependency:
+Install `auto-changelog-plus` as a development dependency:
 
 ```bash
 npm install auto-changelog-plus --save-dev
@@ -121,18 +121,61 @@ Add `auto-changelog-plus -p && git add CHANGELOG.md` to your `version` script in
 }
 ```
 
-Using `-p` or `--package` will use the `version` from `package.json` as the latest release, so all commits between previous releases and now become part of that release. Basically anything that would normally be parsed as `Unreleased` will now appear under the `version` from `package.json`.
+Using `-p` or `--package` uses the `version` from `package.json` as the latest release, so all commits between previous releases and now become part of that release. Basically anything that would normally be parsed as `Unreleased` will now appear under the `version` from `package.json`.
 
 Now every time you run [npm version](https://docs.npmjs.com/cli/version), the changelog will be automatically updated and become part of the version commit.
 
+For projects that are not NPM packages, you can use `npx` or `pnpx` to run `auto-changelog-plus`, for example:
+
+```bash
+npx auto-changelog-plus
+```
+
+Or use it in GitHub Actions:
+
+```yaml
+name: Release for new tag
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # Fetch all history for generating release notes
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 'lts/*'
+
+      - name: Generate release notes
+        run: |
+          npx auto-changelog-plus --starting-version ${{ github.ref_name }}
+          sed -i '1,4d' CHANGELOG.md
+
+      - name: GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          body_path: CHANGELOG.md
+```
+
 ## 🔄 Differences from auto-changelog
 
-`auto-changelog-plus` is a wrapper around `auto-changelog`, fully compatible with all existing usage and configurations of `auto-changelog`.
+`auto-changelog-plus` is a wrapper around `auto-changelog`, fully compatible with all usage and configurations of `auto-changelog`.
 
-Key improvements:
+Main improvements:
 
-- **Optimized default template**: Better adapted to conventional commit specifications
-- **Adjusted default configuration**: Provides more reasonable out-of-the-box experience
+- **Optimized default template**: Better adapted to the **Conventional Commits** specification
+- **Adjusted default configuration**: Provides a more reasonable out-of-the-box experience
 - **Extended template functionality**: Provides additional template helper functions
 
 If you are using `auto-changelog`, you can directly replace it with `auto-changelog-plus` without modifying any configuration.

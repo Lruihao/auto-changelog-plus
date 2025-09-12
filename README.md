@@ -125,6 +125,49 @@ pnpm add -D auto-changelog-plus
 
 现在每次运行 [npm version](https://docs.npmjs.com/cli/version) 时，changelog 将自动更新并成为版本提交的一部分。
 
+在不是 NPM 包的项目中，可以使用 `npx` 或 `pnpx` 来运行 `auto-changelog-plus`，例如：
+
+```bash
+npx auto-changelog-plus
+```
+
+或者在 GitHub Actions 中使用：
+
+```yaml
+name: Release for new tag
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # Fetch all history for generating release notes
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 'lts/*'
+
+      - name: Generate release notes
+        run: |
+          npx auto-changelog-plus --starting-version ${{ github.ref_name }}
+          sed -i '1,4d' CHANGELOG.md
+
+      - name: GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          body_path: CHANGELOG.md
+```
+
 ## 🔄 和 auto-changelog 的区别
 
 `auto-changelog-plus` 是 `auto-changelog` 的上层封装，完全兼容 `auto-changelog` 的所有用法和配置。

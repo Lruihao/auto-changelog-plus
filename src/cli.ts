@@ -2,13 +2,14 @@
 
 import { dirname, join } from 'node:path'
 import process from 'node:process'
+import { fileURLToPath } from 'node:url'
 import { run } from 'auto-changelog/src/run.js'
 
 const argv: string[] = process.argv
-const __root: string = dirname(argv[1])
-const configPath: string = join(__root, '../settings/config.json')
-const templatePath: string = join(__root, '../settings/conventional.hbs')
-const setupPath: string = join(__root, '../settings/setup.cjs')
+const __root: string = dirname(dirname(fileURLToPath(import.meta.url)))
+const configPath: string = join(__root, 'settings/config.json')
+const templatePath: string = join(__root, 'settings/conventional.hbs')
+const setupPath: string = join(__root, 'settings/setup.cjs')
 if (!argv.includes('--config') && !argv.includes('-c')) {
   argv.push('--config', configPath)
 }

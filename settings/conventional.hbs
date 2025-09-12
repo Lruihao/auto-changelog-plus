@@ -66,7 +66,7 @@ Regex reminders
 
 {{#each releases}}
   {{#if href}}
-    ## [{{title}}]({{href}}){{#if tag}} - {{isoDate}}{{/if}}
+    ## [{{title}}]({{href}} "{{isoDate}}"){{#if tag}} - {{niceDate}}{{/if}}
   {{else}}
     ## {{title}}{{#if tag}} - {{isoDate}}{{/if}}
   {{/if}}
@@ -78,32 +78,34 @@ Regex reminders
   {{#if merges}}
     ### :twisted_rightwards_arrows: Merged PRs
 
+    > This release includes **{{merges.length}}** merged pull request{{#unless (eq merges.length 1)}}s{{/unless}} that {{#if (eq merges.length 1)}}has{{else}}have{{/if}} been successfully integrated into the codebase.
+
     {{#each merges}}
       - {{#if commit.breaking}}**Breaking change:** {{/if}}{{capitalize message}} by {{githubUser author}} in {{#if id}}#{{id}}{{/if}}
     {{/each}}
-
-    {{#if fixes}}
-    {{else}}
-      ---
-    {{/if}}
   {{/if}}
 
   {{#if fixes}}
     ### :heavy_check_mark: Closed Issues
 
+    > This release addresses **{{fixes.length}}** issue{{#unless (eq fixes.length 1)}}s{{/unless}} that {{#if (eq fixes.length 1)}}has{{else}}have{{/if}} been resolved and closed.
+
     {{#each fixes}}
       - {{#if commit.breaking}}**Breaking change:** {{/if}}{{capitalize commit.subject}}{{#each fixes}} {{#if id}}#{{id}}{{/if}}{{/each}} by {{githubUser commit.author}}
     {{/each}}
-
-    ---
   {{/if}}
 
-  {{!-- List commits with Breaking Changes or type/type(scope)! formats --}}
+  {{#if (or merges.length fixes.length)}}
+  ---
+  {{/if}}
+
+  {{!-- Create unified commits array using the helper --}}
+  {{#with (mergeAllCommits merges fixes commits) as |commits|}}
+
   {{#commit-list commits heading='### :warning: Breaking Changes' message='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:' }}
     - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
   {{/commit-list}}
 
-  {{!-- List commits organized under a heading, but not those already listed in the breaking section --}}
   {{#commit-list commits heading='### :tada: New Features' message='^[fF]eat:|[fF]eat\(|^:sparkles:|^:tada:|^✨|^🎉' exclude='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:'}}
     - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
   {{/commit-list}}
@@ -152,8 +154,10 @@ Regex reminders
     - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
   {{/commit-list}}
 
+  {{/with}}
+
   {{#if href}}
-    **Full Changelog**: {{ href}}
+    **Full Changelog**: {{href}}
   {{/if}}
 
 {{/each}}

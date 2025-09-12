@@ -1,24 +1,67 @@
-// Custom Handlebars helpers
+/**
+ * Custom Handlebars helpers for auto-changelog-plus
+ *
+ * @author Lruihao <1024@lruihao.cn>
+ * @license MIT
+ *
+ * @see {@link https://github.com/Lruihao/auto-changelog-plus} Project repository
+ * @see {@link https://handlebarsjs.com/} Handlebars.js documentation
+ */
+
 module.exports = function (Handlebars) {
   /**
+   * Handlebars helper for logical OR operation
+   * @param {...*} args Values to check
+   * @returns {boolean} True if any argument is truthy
+   */
+  Handlebars.registerHelper('or', (...args) => {
+    // Remove the options object (last argument)
+    const values = args.slice(0, -1)
+    return values.some(val => !!val)
+  })
+
+  /**
+   * Handlebars helper for logical AND operation
+   * @param {...*} args Values to check
+   * @returns {boolean} True if all arguments are truthy
+   */
+  Handlebars.registerHelper('and', (...args) => {
+    // Remove the options object (last argument)
+    const values = args.slice(0, -1)
+    return values.every(val => !!val)
+  })
+
+  /**
+   * Handlebars helper for equality comparison
+   * @param {*} a First value
+   * @param {*} b Second value
+   * @returns {boolean} True if values are equal
+   */
+  Handlebars.registerHelper('eq', (a, b) => {
+    return a === b
+  })
+
+  /**
    * Handlebars helper to replace a string with another string
-   * @param {string} context the string to replace
+   * @param {string} context The string to replace
    * @param {object} options
-   * @param {string} options.hash.from the string to replace
-   * @param {string} options.hash.to the string to replace with
+   * @param {string} options.hash.from The string to replace
+   * @param {string} options.hash.to The string to replace with
    * @example {{replace "foo bar" from="foo" to="baz"}} => "baz bar"
    */
   Handlebars.registerHelper('replace', (context, options) => {
     return context.replace(options.hash.from, options.hash.to)
   })
+
   /**
-   * Handlebars helper to convert a name to a GitHub username
-   * @param {string} context name to convert
+   * Handlebars helper to convert a commit name to a GitHub username
+   * @param {string} commitName Commit name to convert
    * @param {object} options
-   * @param {boolean} [options.hash.linked=true] whether to return a linked username
+   * @param {boolean} [options.hash.linked=true] Whether to return a linked username
    * @example {{githubUser "Cell"}} => "Lruihao"
+   * @example {{githubUser "Cell" linked=true}} => "[@Lruihao](https://github.com/Lruihao)"
    */
-  Handlebars.registerHelper('githubUser', (context, { hash: { linked = false } }) => {
+  Handlebars.registerHelper('githubUser', (commitName, { hash: { linked = false } }) => {
     /**
      * Map Commit names to GitHub usernames
      * if your commit name is not same as your GitHub username, add an entry here.
@@ -31,16 +74,16 @@ module.exports = function (Handlebars) {
       'dependabot[bot]': 'dependabot',
       // Collaborators, Contributors
     }
-    const username = map[context] || context
+    const githubUser = map[commitName] || commitName
     if (linked) {
-      return `[@${username}](https://github.com/${username})`
+      return `[@${githubUser}](https://github.com/${githubUser})`
     }
-    return `@${username}`
+    return `@${githubUser}`
   })
 
   /**
    * Handlebars helper to capitalize the first letter of a string
-   * @param {string} context the string to capitalize
+   * @param {string} context The string to capitalize
    * @example {{capitalize "hello world"}} => "Hello world"
    * @example {{capitalize "**scope**: message"}} => "**Scope**: Message"
    */
@@ -61,5 +104,63 @@ module.exports = function (Handlebars) {
 
     // Regular capitalization
     return context.charAt(0).toUpperCase() + context.slice(1)
+  })
+
+  /**
+   * Merge commits, merges, and fixes into a unified array
+   * @param {Array} merges Array of merge objects
+   * @param {Array} fixes Array of fix objects
+   * @param {Array} commits Array of commit objects
+   * @returns {Array} Unified array of all commits
+   */
+  Handlebars.registerHelper('mergeAllCommits', (merges, fixes, commits) => {
+    const allCommits = []
+
+    // Add commits from merges
+    if (merges && Array.isArray(merges)) {
+      merges.forEach((merge) => {
+        if (merge.commit) {
+          allCommits.push({
+            ...merge.commit,
+            _source: 'merge',
+            _mergeInfo: {
+              id: merge.id,
+              message: merge.message,
+              href: merge.href,
+              author: merge.author,
+            },
+          })
+        }
+      })
+    }
+
+    // Add commits from fixes
+    if (fixes && Array.isArray(fixes)) {
+      fixes.forEach((fix) => {
+        if (fix.commit) {
+          allCommits.push({
+            ...fix.commit,
+            _source: 'fix',
+            _fixInfo: {
+              fixes: fix.fixes,
+            },
+          })
+        }
+      })
+    }
+
+    // Add regular commits
+    if (commits && Array.isArray(commits)) {
+      commits.forEach((commit) => {
+        allCommits.push({
+          ...commit,
+          _source: 'commit',
+        })
+      })
+    }
+
+    // Sort by date (newest first)
+    // return allCommits.sort((a, b) => new Date(b.date) - new Date(a.date));
+    return allCommits
   })
 }

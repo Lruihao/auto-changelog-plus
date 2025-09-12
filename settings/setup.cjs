@@ -42,6 +42,26 @@ module.exports = function (Handlebars) {
   })
 
   /**
+   * Handlebars helper for greater than comparison
+   * @param {*} a First value
+   * @param {*} b Second value
+   * @returns {boolean} True if a is greater than b
+   */
+  Handlebars.registerHelper('gt', (a, b) => {
+    return a > b
+  })
+
+  /**
+   * Handlebars helper for less than comparison
+   * @param {*} a First value
+   * @param {*} b Second value
+   * @returns {boolean} True if a is less than b
+   */
+  Handlebars.registerHelper('lt', (a, b) => {
+    return a < b
+  })
+
+  /**
    * Handlebars helper to replace a string with another string
    * @param {string} context The string to replace
    * @param {object} options

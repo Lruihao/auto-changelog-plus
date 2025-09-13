@@ -129,9 +129,11 @@ For projects that are not NPM packages, you can use `npx` or `pnpx` to run `auto
 
 ```bash
 npx auto-changelog-plus
+# or
+pnpx auto-changelog-plus
 ```
 
-Or use it in GitHub Actions:
+In GitHub Actions, you can use the following workflow to automatically generate release notes:
 
 ```yaml
 name: Release for new tag

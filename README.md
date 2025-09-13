@@ -129,9 +129,11 @@ pnpm add -D auto-changelog-plus
 
 ```bash
 npx auto-changelog-plus
+# 或
+pnpx auto-changelog-plus
 ```
 
-或者在 GitHub Actions 中使用：
+在 GitHub Actions 中，你可以使用以下工作流来自动生成发布说明：
 
 ```yaml
 name: Release for new tag

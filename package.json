@@ -1,7 +1,7 @@
 {
   "name": "auto-changelog-plus",
   "type": "module",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "packageManager": "pnpm@10.15.0",
   "description": "Command line tool for generating a changelog from git tags and commit history",
   "author": "Lruihao (https://lruihao.cn)",

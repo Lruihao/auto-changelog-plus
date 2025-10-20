@@ -1,3 +1,5 @@
+const { execSync } = require('node:child_process')
+
 /**
  * Custom Handlebars helpers for auto-changelog-plus
  *
@@ -9,6 +11,20 @@
  */
 
 module.exports = function (Handlebars) {
+  /**
+   * Check if the git remote is GitHub
+   * @returns {boolean} True if remote is GitHub
+   */
+  function isGitHubRemote() {
+    try {
+      const remoteUrl = execSync('git config --get remote.origin.url', { encoding: 'utf8' }).trim()
+      return remoteUrl.includes('github.com')
+    }
+    catch {
+      return false
+    }
+  }
+
   /**
    * Handlebars helper for logical OR operation
    * @param {...*} args Values to check
@@ -74,14 +90,21 @@ module.exports = function (Handlebars) {
   })
 
   /**
-   * Handlebars helper to convert a commit name to a GitHub username
+   * Handlebars helper to convert a commit name to a GitHub username if applicable
    * @param {string} commitName Commit name to convert
+   * @param {string} commitEmail Commit email
    * @param {object} options
    * @param {boolean} [options.hash.linked=true] Whether to return a linked username
-   * @example {{githubUser "Cell"}} => "Lruihao"
-   * @example {{githubUser "Cell" linked=true}} => "[@Lruihao](https://github.com/Lruihao)"
+   * @example {{getAuthor "Cell" ""}} => "Lruihao"
+   * @example {{getAuthor "Cell" "" linked=true}} => "[@Lruihao](https://github.com/Lruihao)"
    */
-  Handlebars.registerHelper('githubUser', (commitName, { hash: { linked = false } }) => {
+  Handlebars.registerHelper('getAuthor', (commitName, commitEmail, { hash: { linked = false } }) => {
+    // Check if remote URL is GitHub
+    if (!isGitHubRemote()) {
+      // Syntax: commitName <commitEmail>
+      return `${commitName} \\<${commitEmail}\\>`
+    }
+
     /**
      * Map Commit names to GitHub usernames
      * if your commit name is not same as your GitHub username, add an entry here.

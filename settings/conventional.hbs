@@ -86,7 +86,7 @@ Regex reminders
     {{/if}}
 
     {{#each merges}}
-      - {{#if commit.breaking}}**Breaking change:** {{/if}}{{capitalize message}} by {{githubUser author}} in {{#if id}}#{{id}}{{/if}}
+      - {{#if commit.breaking}}**Breaking change:** {{/if}}{{capitalize message}} by {{getAuthor author email}} in {{#if id}}#{{id}}{{/if}}
     {{/each}}
 
     {{#if (gt merges.length 5)}}
@@ -105,7 +105,7 @@ Regex reminders
     {{/if}}
 
     {{#each fixes}}
-      - {{#if commit.breaking}}**Breaking change:** {{/if}}{{capitalize commit.subject}}{{#each fixes}} {{#if id}}#{{id}}{{/if}}{{/each}} by {{githubUser commit.author}}
+      - {{#if commit.breaking}}**Breaking change:** {{/if}}{{capitalize commit.subject}}{{#each fixes}} {{#if id}}#{{id}}{{/if}}{{/each}} by {{getAuthor commit.author}}
     {{/each}}
 
     {{#if (gt fixes.length 5)}}
@@ -121,55 +121,55 @@ Regex reminders
   {{#with (mergeAllCommits merges fixes commits) as |commits|}}
 
   {{#commit-list commits heading='### :warning: Breaking Changes' message='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:' }}
-    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
+    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{getAuthor author email}}
   {{/commit-list}}
 
   {{#commit-list commits heading='### :tada: New Features' message='^[fF]eat:|[fF]eat\(|^:sparkles:|^:tada:|^✨|^🎉' exclude='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:'}}
-    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
+    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{getAuthor author email}}
   {{/commit-list}}
 
   {{#commit-list commits heading='### :bug: Bug Fixes' message='^[fF]ix:|^[fF]ix\(|^:bug:|^🐛' exclude='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:'}}
-    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
+    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{getAuthor author email}}
   {{/commit-list}}
 
   {{#commit-list commits heading='### :zap: Performance Improvements' message='^[pP]erf:|^[pP]erf\(|^:zap:|^:rocket:|^⚡|^🚀' exclude='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:'}}
-    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
+    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{getAuthor author email}}
   {{/commit-list}}
 
   {{#commit-list commits heading='### :recycle: Refactoring and Updates' message='^[rR]efactor:|^[rR]efactor\(|^:recycle:|^♻️' exclude='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:'}}
-    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
+    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{getAuthor author email}}
   {{/commit-list}}
 
   {{#commit-list commits heading='### :memo: Documentation Changes' message='^[dD]ocs:|^[dD]ocs\(|^:memo:|^:book:|^📝|^📚' exclude='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:'}}
-    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
+    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{getAuthor author email}}
   {{/commit-list}}
 
   {{#commit-list commits heading='### :white_check_mark: Changes to Test Assets' message='^[tT]est:|^[tT]est\(|^:white_check_mark:|^:test_tube:|^✅|^🧪' exclude='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:'}}
-    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
+    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{getAuthor author email}}
   {{/commit-list}}
 
   {{#commit-list commits heading='### :art: Tidying of Code eg Whitespace' message='^[sS]tyle:|^[sS]tyle\(|^:art:|^🎨' exclude='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:'}}
-    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
+    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{getAuthor author email}}
   {{/commit-list}}
 
   {{#commit-list commits heading='### :wrench: Chores And Housekeeping' message='^[cC]hore:|^[cC]hore\(|^:wrench:|^:hammer:|^🔧|^🔨' exclude='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:'}}
-    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
+    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{getAuthor author email}}
   {{/commit-list}}
 
   {{#commit-list commits heading='### :construction: Build Changes' message='^[bB]uild:|^[bB]uild\(|^:construction:|^🚧' exclude='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:'}}
-    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
+    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{getAuthor author email}}
   {{/commit-list}}
 
   {{#commit-list commits heading='### :construction_worker: Continuous Integration' message='^[cC]i:|^[cC]i\(|^:construction_worker:|^👷' exclude='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:'}}
-    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
+    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{getAuthor author email}}
   {{/commit-list}}
 
   {{#commit-list commits heading='### :rewind: Reverts' message='^[rR]evert|^[rR]evert\(|^:rewind:|^⏪' exclude='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:'}}
-    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
+    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{getAuthor author email}}
   {{/commit-list}}
 
   {{#commit-list commits heading='### :sparkles: General Changes' exclude='([bB]reaking( [cC]hange)?|BREAKING CHANGE):|^([a-zA-Z]+)(\([^)]+\))?!:|^[fF]eat:|^[fF]eat\(|^[fF]ix:|^[fF]ix\(|^[pP]erf:|^[pP]erf\(|^[rR]efactor:|^[rR]efactor\(|^[dD]ocs:|^[dD]ocs\(|^[tT]est:|^[tT]est\(|^[sS]tyle:|^[sS]tyle\(|^[cC]hore:|^[cC]hore\(|^[bB]uild:|^[bB]uild\(|^[cC]i:|^[cC]i\(|^[rR]evert|^[rR]evert\(|^:sparkles:|^:tada:|^✨|^🎉|^:bug:|^🐛|^:zap:|^:rocket:|^⚡|^🚀|^:recycle:|^♻️|^:memo:|^:book:|^📝|^📚|^:white_check_mark:|^:test_tube:|^✅|^🧪|^:art:|^🎨|^:wrench:|^:hammer:|^🔧|^🔨|^:construction:|^🚧|^:construction_worker:|^👷|^:rewind:|^⏪'}}
-    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{githubUser author}}
+    - {{capitalize subject}} [`{{shorthash}}`]({{href}}) by {{getAuthor author email}}
   {{/commit-list}}
 
   {{/with}}

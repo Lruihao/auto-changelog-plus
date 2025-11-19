@@ -92,13 +92,13 @@ module.exports = function (Handlebars) {
   /**
    * Handlebars helper to convert a commit name to a GitHub username if applicable
    * @param {string} commitName Commit name to convert
-   * @param {string} commitEmail Commit email
-   * @param {object} options
+   * @param {string} [commitEmail] Commit email
+   * @param {object} [options]
    * @param {boolean} [options.hash.linked=true] Whether to return a linked username
-   * @example {{getAuthor "Cell" ""}} => "Lruihao"
-   * @example {{getAuthor "Cell" "" linked=true}} => "[@Lruihao](https://github.com/Lruihao)"
+   * @example {{getAuthor "Cell"}} => "Lruihao"
+   * @example {{getAuthor "Cell" linked=true}} => "[@Lruihao](https://github.com/Lruihao)"
    */
-  Handlebars.registerHelper('getAuthor', (commitName, commitEmail, { hash: { linked = false } }) => {
+  Handlebars.registerHelper('getAuthor', (commitName, commitEmail = '', { hash: { linked = false } }) => {
     // Check if remote URL is GitHub
     if (!isGitHubRemote()) {
       // Syntax: commitName <commitEmail>

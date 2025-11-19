@@ -105,7 +105,7 @@ Regex reminders
     {{/if}}
 
     {{#each fixes}}
-      - {{#if commit.breaking}}**Breaking change:** {{/if}}{{capitalize commit.subject}}{{#each fixes}} {{#if id}}#{{id}}{{/if}}{{/each}} by {{getAuthor commit.author}}
+      - {{#if commit.breaking}}**Breaking change:** {{/if}}{{capitalize commit.subject}}{{#each fixes}} {{#if id}}#{{id}}{{/if}}{{/each}} by {{getAuthor commit.author commit.email}}
     {{/each}}
 
     {{#if (gt fixes.length 5)}}

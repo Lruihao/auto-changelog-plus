@@ -1,4 +1,7 @@
 const { execSync } = require('node:child_process')
+const fs = require('node:fs')
+const path = require('node:path')
+const process = require('node:process')
 
 /**
  * Custom Handlebars helpers for auto-changelog-plus
@@ -11,6 +14,17 @@ const { execSync } = require('node:child_process')
  */
 
 module.exports = function (Handlebars) {
+  // Load authorMap from package.json in the current working directory
+  let authorMap = {}
+  try {
+    const packageJsonPath = path.join(process.cwd(), 'package.json')
+    if (fs.existsSync(packageJsonPath)) {
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
+      authorMap = packageJson['auto-changelog-plus']?.authorMap || {}
+    }
+  }
+  catch {}
+
   /**
    * Check if the git remote is GitHub
    * @returns {boolean} True if remote is GitHub
@@ -106,10 +120,10 @@ module.exports = function (Handlebars) {
     }
 
     /**
-     * Map Commit names to GitHub usernames
-     * if your commit name is not same as your GitHub username, add an entry here.
+     * Default map of Commit names to GitHub usernames
+     * Can be overridden in package.json via the auto-changelog-plus.authorMap field
      */
-    const map = {
+    const defaultMap = {
       // Author
       'Cell': 'Lruihao',
       // Bots
@@ -117,6 +131,9 @@ module.exports = function (Handlebars) {
       'dependabot[bot]': 'dependabot',
       // Collaborators, Contributors
     }
+
+    // Merge authorMap from package.json with defaultMap
+    const map = { ...defaultMap, ...authorMap }
     const githubUser = map[commitName] || commitName
     if (linked) {
       return `[@${githubUser}](https://github.com/${githubUser})`

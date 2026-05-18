@@ -170,6 +170,23 @@ jobs:
           body_path: CHANGELOG.md
 ```
 
+## 👤 Configure Author Mapping (Optional)
+
+You can configure `authorMap` in the `auto-changelog-plus` field in `package.json` to map git commit author names to GitHub usernames. This is very useful when generating Changelogs with GitHub links.
+
+```json
+{
+  "name": "my-awesome-package",
+  "version": "1.0.0",
+  "auto-changelog-plus": {
+    "authorMap": {
+      "Commit Author Name": "GitHub Username",
+      "Cell": "Lruihao"
+    }
+  }
+}
+```
+
 ## 🔄 Differences from auto-changelog
 
 `auto-changelog-plus` is a wrapper around `auto-changelog`, fully compatible with all usage and configurations of `auto-changelog`.
